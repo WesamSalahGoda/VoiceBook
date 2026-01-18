@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>شرح كتاب الأربعين النووية</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', Tahoma, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      min-height: 100vh;
+      padding: 25px 15px 40px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: rgba(0,0,0,0.35);
+      border-radius: 22px;
+      padding: 25px 20px 35px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+    }
+
+    h1, h2, h3, p {
+      text-align: center;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #ffd166;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: normal;
+      opacity: 0.95;
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin-top: 18px;
+      margin-bottom: 30px;
+      opacity: 0.85;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+    }
+
+    a { text-decoration: none; }
+
+    .btn {
+      background: linear-gradient(135deg, #ffd166, #fca311);
+      color: #1b1b1b;
+      padding: 16px 10px;
+      border-radius: 16px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.45);
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>مكتبة الكتب الصوتية</h1>
+    <h2>شرح كتاب الأربعين النووية</h2>
+    <h3>للشيخ عثمان الخميس</h3>
+    <h3>إعداد : م / وسام صلاح جودة</h3>
+    <p>اختر رقم المحاضرة للاستماع</p>
+
+    <div class="grid">
+      <script>
+        const baseUrl = 'https://archive.org/download/badir-fosol-ibnkatheer/';
+        for (let i = 1; i <= 15; i++) {
+          const number = String(i).padStart(2, '0');
+          const audioSrc = `${baseUrl}${number}.mp3`;
+
+          document.write(`
+            <a href="player.html?title=${i}&src=${encodeURIComponent(audioSrc)}">
+              <div class="btn">المحاضرة ${i}</div>
+            </a>
+          `);
+        }
+      </script>
+    </div>
+  </div>
+
+</body>
+</html>
