@@ -1,3 +1,16 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 95%;       /* تغطي تقريبًا كامل الشاشة */
+    padding: 20px 10px;
+  }
+}
+
 /* ===============================
    Global Styles
 =============================== */
