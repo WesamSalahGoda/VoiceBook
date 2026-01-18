@@ -70,14 +70,16 @@ a {
    Layout Containers
 =============================== */
 .container {
-  max-width: 900px;
-  width: 100%;
-  margin: 20px auto;
+  max-width: 900px;        /* أقصى عرض */
+  width: 95%;              /* عرض ديناميكي بالنسبة للشاشة */
+  margin: 20px auto;       /* يوسّط الحاوية أفقياً */
   background: rgba(0,0,0,0.35);
   border-radius: 22px;
-  padding: 25px 20px 35px;
+  padding: 25px 15px 35px; /* قلل الـ padding الجانبي قليلاً */
   box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  box-sizing: border-box;  /* مهم لضبط الحجم داخل الشاشة */
 }
+
 
 .grid {
   display: grid;
@@ -204,6 +206,7 @@ audio {
   border: 4px solid #ffd166; /* إطار ذهبي */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* الظل */
 }
+
 
 
 
