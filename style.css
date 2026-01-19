@@ -220,6 +220,29 @@ audio {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* الظل */
 }
 
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.icon-btn {
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+}
+
+.icon-btn:hover {
+  background: #1565c0;
+}
+
 
 
 
