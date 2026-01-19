@@ -281,6 +281,16 @@ audio {
   .logo { width: 70px; height: 70px; }
 }
 
+/* الوضع الرأسي - العرض الطبيعي */
+@media (orientation: portrait) {
+  .player-card audio {
+    width: 95%;       /* يمكنك تعديل القيمة حسب رغبتك */
+    max-width: 600px; /* أقصى عرض للمشغل */
+    margin: 25px auto; /* توسيط المشغل */
+    display: block;    /* لضمان أنه عنصر بلوك عند توسيطه */
+  }
+}
+
 
 
 
