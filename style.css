@@ -243,6 +243,23 @@ audio {
   background: #1565c0;
 }
 
+#rotate-wrapper {
+  transition: transform 0.4s ease;
+  transform-origin: center center;
+}
+
+/* الوضع الأفقي */
+.landscape {
+  transform: rotate(90deg);
+  width: 100vh;
+  height: 100vw;
+}
+
+/* ضبط التمركز */
+.landscape .player-card {
+  width: 100vh;
+}
+
 
 
 
