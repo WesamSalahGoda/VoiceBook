@@ -27,7 +27,7 @@
       </div>
 
       <div class="footer">مكتبة الكتب الصوتية</div>
-      <div class="footer">إعداد : م / وسام صلاح جودة</div>
+      <div class="footer">من إعداد : م / وسام صلاح جودة</div>
 
     </div>
 
@@ -48,16 +48,18 @@
   const wrapper = document.getElementById('rotate-wrapper');
 
   function rotateOn() {
-    wrapper.classList.add('landscape');
-    document.body.classList.add('no-scroll');
-  }
+  wrapper.classList.add('landscape');
+  document.body.classList.add('no-scroll', 'landscape-active');
+}
 
-  function rotateOff() {
-    wrapper.classList.remove('landscape');
-    document.body.classList.remove('no-scroll');
-  }
+function rotateOff() {
+  wrapper.classList.remove('landscape');
+  document.body.classList.remove('no-scroll', 'landscape-active');
+}
+
 </script>
 
 </body>
 </html>
+
 
