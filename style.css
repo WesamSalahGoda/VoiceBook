@@ -196,37 +196,37 @@ audio {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 100vh;
-  height: 100vw;
+  width: 100vh;  /* عرض الشاشة بعد التدوير */
+  height: 100vw; /* ارتفاع الشاشة بعد التدوير */
   transform: translate(-50%, -50%) rotate(90deg);
   transform-origin: center center;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   z-index: 9999;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: visible;
 }
 
-
-/* المشغل يملأ الشاشة */
 .landscape .player-card {
-  width: 90%;             /* ليس 100% حتى لا يضغط */
-  max-width: 600px;
+  width: 90%;
+  max-width: 90vh;  /* لضمان ملء الشاشة أفقيًا */
   padding: 30px 25px 35px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .landscape audio {
-  width: 100%;
-  min-height: 60px;       /* هذا يضمن ظهور المشغل */
-  flex: 0 0 auto;         /* يمنع الضغط في flex */
+  width: 90%;           /* استخدم 90% من عرض الحاوية */
+  max-width: 90vh;      /* أكبر عرض ممكن بعد التدوير */
+  height: 60px;
+  flex-shrink: 0;       /* لا يقلص */
   margin: 20px 0;
-  z-index: 10;
 }
+
 
 /* ===============================
    Books List
@@ -273,6 +273,7 @@ audio {
 body.landscape-active {
   padding: 0;
 }
+
 
 
 
