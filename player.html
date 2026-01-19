@@ -37,15 +37,22 @@
     <audio id="audio" controls autoplay></audio>
 
     <div class="controls">
-<button class="icon-btn" onclick="rotateLandscape()">🔄</button>
-  <button class="icon-btn" onclick="rotatePortrait()">📱</button>
-  <a href="javascript:history.back()" class="icon-btn">⬅</a>
+      <button class="icon-btn" onclick="rotateOn()">🔄</button>
+      <button class="icon-btn" onclick="rotateOff()">📱</button>
+      <a href="javascript:history.back()" class="icon-btn">⬅</a>
     </div>
 
     <div class="footer">مكتبة الكتب الصوتية</div>
     <div class="footer">إعداد : م / وسام صلاح جودة</div>
   </div>
 
+
+  <div id="rotate-wrapper">
+  <div class="player-card">
+    <!-- كل المحتوى الحالي هنا بدون أي تغيير -->
+  </div>
+</div>
+  
   <script>
     const params = new URLSearchParams(window.location.search);
     const title = params.get('title') || '';
@@ -58,3 +65,4 @@
 </body>
 
 </html>
+
