@@ -194,11 +194,12 @@ audio {
 /* ===== Landscape Mode ===== */
 .landscape {
   position: fixed;
-  inset: 0;
+  top: 50%;
+  left: 50%;
   width: 100vh;
   height: 100vw;
-  transform: rotate(90deg) translateY(-100%);
-  transform-origin: top left;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center center;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   z-index: 9999;
   overflow: hidden;
@@ -257,3 +258,4 @@ audio {
   h2 { font-size: 20px; }
   .logo { width: 70px; height: 70px; }
 }
+
