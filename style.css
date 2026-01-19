@@ -16,7 +16,18 @@ body {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: #fff;
   min-height: 100vh;
+
+  /* لجعل الكارت في وسط الصفحة */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* الوسط الرأسي */
+  align-items: center;      /* الوسط الأفقي */
   padding: 20px;
+}
+
+body.landscape-active {
+  padding: 0;
+  display: block; /* الوضع الأفقي لا يحتاج flex */
 }
 
 /* منع السكرول عند التدوير */
@@ -270,9 +281,6 @@ audio {
   .logo { width: 70px; height: 70px; }
 }
 
-body.landscape-active {
-  padding: 0;
-}
 
 
 
