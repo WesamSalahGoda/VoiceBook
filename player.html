@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
+
+<script>
+  function rotateLandscape() {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
+
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(() => {});
+    }
+  }
+
+  function rotatePortrait() {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('portrait').catch(() => {});
+    }
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+  }
+</script>
+
 <body>
 
   <div class="player-card">
@@ -14,7 +37,9 @@
     <audio id="audio" controls autoplay></audio>
 
     <div class="controls">
-      <a href="javascript:history.back()" class="btn">⬅ رجوع</a>
+<button class="icon-btn" onclick="rotateLandscape()">🔄</button>
+  <button class="icon-btn" onclick="rotatePortrait()">📱</button>
+  <a href="javascript:history.back()" class="icon-btn">⬅</a>
     </div>
 
     <div class="footer">مكتبة الكتب الصوتية</div>
@@ -33,4 +58,3 @@
 </body>
 
 </html>
-
