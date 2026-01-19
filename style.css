@@ -203,27 +203,29 @@ audio {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   z-index: 9999;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
 /* المشغل يملأ الشاشة */
 .landscape .player-card {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  margin: 0;
-  border-radius: 0;
+  width: 90%;             /* ليس 100% حتى لا يضغط */
+  max-width: 600px;
+  padding: 30px 25px 35px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center; /* لضمان توسيط كل المكونات */
+  align-items: center;
 }
 
 .landscape audio {
-  width: 90%;
-  max-width: 600px;
-  height: 60px;
-  margin: 20px auto;
+  width: 100%;
+  min-height: 60px;       /* هذا يضمن ظهور المشغل */
+  flex: 0 0 auto;         /* يمنع الضغط في flex */
+  margin: 20px 0;
+  z-index: 10;
 }
 
 /* ===============================
@@ -271,5 +273,6 @@ audio {
 body.landscape-active {
   padding: 0;
 }
+
 
 
