@@ -45,16 +45,19 @@
 
   <!-- كود الدوران -->
   <script>
-    const wrapper = document.getElementById('rotate-wrapper');
+  const wrapper = document.getElementById('rotate-wrapper');
 
-    function rotateOn() {
-      wrapper.classList.add('landscape');
-    }
+  function rotateOn() {
+    wrapper.classList.add('landscape');
+    document.body.classList.add('no-scroll');
+  }
 
-    function rotateOff() {
-      wrapper.classList.remove('landscape');
-    }
-  </script>
+  function rotateOff() {
+    wrapper.classList.remove('landscape');
+    document.body.classList.remove('no-scroll');
+  }
+</script>
 
 </body>
 </html>
+
