@@ -194,16 +194,16 @@ audio {
 /* ===== Landscape Mode ===== */
 .landscape {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  inset: 0;
   width: 100vh;
   height: 100vw;
-  transform: translate(-50%, -50%) rotate(90deg);
-  transform-origin: center center;
+  transform: rotate(90deg) translateX(100%);
+  transform-origin: top left;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   z-index: 9999;
   overflow: hidden;
 }
+
 
 /* المشغل يملأ الشاشة */
 .landscape .player-card {
@@ -259,3 +259,6 @@ audio {
   .logo { width: 70px; height: 70px; }
 }
 
+body.landscape-active {
+  padding: 0;
+}
