@@ -100,12 +100,6 @@ p { font-size: 14px; margin-bottom: 15px; }
   margin-top: 4px;
 }
 
-/* إزالة الخط من روابط المحاضرات */
-.grid a {
-  text-decoration: none;
-  color: inherit;
-}
-
 /* شبكة أزرار المحاضرات */
 .grid {
   display: grid;
@@ -114,6 +108,28 @@ p { font-size: 14px; margin-bottom: 15px; }
   margin-top: 20px;
 }
 
+.grid a {
+  text-decoration: none; /* إزالة الخط الأزرق */
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px 10px;
+  background: #1e88e5;
+  color: #fff;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+}
 
 
 
@@ -267,6 +283,7 @@ p { font-size: 14px; margin-bottom: 15px; }
   .time-controls button { font-size: 16px; padding: 6px 12px; }
   .time-controls span { font-size: 16px; }
 }
+
 
 
 
