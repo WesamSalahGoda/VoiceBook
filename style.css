@@ -19,9 +19,10 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   padding: 20px;
 }
+
 
 h1, h2, h3, p {
   text-align: center;
@@ -145,6 +146,7 @@ p { font-size: 14px; margin-bottom: 15px; }
    Player Card (صفحة المشغل)
 =============================== */
 .player-card {
+   margin: auto;
   background: rgba(0,0,0,0.45);
   backdrop-filter: blur(8px);
   border-radius: 26px;
@@ -265,5 +267,6 @@ p { font-size: 14px; margin-bottom: 15px; }
   .time-controls button { font-size: 16px; padding: 6px 12px; }
   .time-controls span { font-size: 16px; }
 }
+
 
 
