@@ -19,17 +19,25 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
 }
 
-h1, h2, h3, p { text-align: center; }
+h1, h2, h3, p {
+  text-align: center;
+}
 
-h2 { font-size: 22px; margin-bottom: 10px; }
+h1 { font-size: 28px; margin-bottom: 10px; }
+h2 { font-size: 22px; margin-bottom: 6px; }
+h3 { font-size: 18px; font-weight: normal; opacity: 0.85; margin-bottom: 15px; }
+p { font-size: 14px; margin-bottom: 15px; }
 
-h3 { font-size: 18px; font-weight: normal; opacity: 0.85; margin-bottom: 20px; }
-
-.footer { margin-top: 15px; font-size: 13px; opacity: 0.7; }
+.footer {
+  margin-top: 15px;
+  font-size: 13px;
+  opacity: 0.7;
+  text-align: center;
+}
 
 /* ===============================
    Container
@@ -37,138 +45,177 @@ h3 { font-size: 18px; font-weight: normal; opacity: 0.85; margin-bottom: 20px; }
 .container {
   width: 100%;
   max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
 /* ===============================
-   Book Links
+   Logo
+=============================== */
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #ffd166;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  margin-bottom: 15px;
+}
+
+/* ===============================
+   Books (صفحة الكتب)
 =============================== */
 .book {
   display: block;
-  background: rgba(255, 255, 255, 0.1);
+  width: 100%;
+  background: rgba(0,0,0,0.45);
   border-radius: 12px;
-  padding: 15px 20px;
-  margin-bottom: 15px;
+  padding: 12px 15px;
+  margin: 6px 0;
   text-decoration: none;
   color: #fff;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
 .book:hover {
-  background: rgba(255, 209, 102, 0.3);
   transform: scale(1.02);
+  background: rgba(30,136,229,0.8);
 }
 
 .book-title {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
 .book-desc {
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.85;
+  margin-top: 4px;
 }
 
 /* ===============================
-   Buttons (أزرار المحاضرات)
+   Lecture Buttons (صفحة المحاضرات)
 =============================== */
 .btn {
   display: block;
   width: 100%;
-  text-align: center;
   background: #1e88e5;
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 12px 0;
+  padding: 10px 0;
   font-size: 18px;
-  margin-bottom: 12px;
+  text-align: center;
   cursor: pointer;
+  margin-bottom: 6px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
   transition: transform 0.2s ease, background 0.2s ease;
   text-decoration: none;
 }
 
 .btn:hover {
-  background: #1565c0;
   transform: scale(1.03);
+  background: #1565c0;
 }
 
 /* ===============================
-   Player Card
+   Player Card (صفحة المشغل)
 =============================== */
 .player-card {
   background: rgba(0,0,0,0.45);
   backdrop-filter: blur(8px);
   border-radius: 26px;
-  padding: 40px 30px;
+  padding: 30px 25px;
   width: 100%;
   max-width: 520px;
   box-shadow: 0 25px 50px rgba(0,0,0,0.6);
   text-align: center;
   position: relative;
   overflow: visible;
-}
-
-/* Logo */
-.player-card .logo {
-  display: block;
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #ffd166;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-}
-
-/* Audio */
-.player-card audio {
-  width: 100%;
-  max-width: 600px;
-  margin: 20px 0;
-  border-radius: 12px;
-}
-
-/* Controls */
-.controls {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
-.control-btn {
+/* Hide default audio */
+.player-card audio {
+  display: none;
+}
+
+/* Audio Player Visual */
+.audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Play Circle */
+.play-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd166, #fca311);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1b1b1b;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.play-circle:hover { transform: scale(1.05); }
+
+/* Progress Ring */
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.25s linear;
+  transform-origin: 50% 50%;
+  stroke-linecap: round;
+}
+
+/* Time Controls */
+.time-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-controls button {
   background: #1e88e5;
   color: #fff;
   border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 18px;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.control-btn:hover {
+.time-controls button:hover {
   background: #1565c0;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-.go-btn {
-  background: #4CAF50;
-  font-weight: bold;
-  border-radius: 12px;
-  padding: 0 14px;
-  height: 50px;
+.time-controls span {
   font-size: 18px;
-}
-
-#timeValue {
-  min-width: 40px;
+  font-weight: bold;
+  min-width: 30px;
   text-align: center;
-  font-weight: bold;
-  font-size: 18px;
   color: #ffd166;
 }
 
@@ -176,13 +223,25 @@ h3 { font-size: 18px; font-weight: normal; opacity: 0.85; margin-bottom: 20px; }
    Responsive
 =============================== */
 @media (max-width: 480px) {
+  body { padding: 15px; }
+
+  h1 { font-size: 24px; }
   h2 { font-size: 20px; }
+  h3 { font-size: 16px; }
 
-  .player-card { padding: 30px 20px; max-width: 95%; }
+  .logo { width: 70px; height: 70px; }
 
-  .player-card .logo { width: 70px; height: 70px; }
+  .book, .btn {
+    font-size: 16px;
+    padding: 8px 0;
+  }
 
-  .btn, .control-btn, .go-btn { font-size: 16px; padding: 8px; }
+  .play-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 28px;
+  }
 
-  #timeValue { font-size: 16px; }
+  .time-controls button { font-size: 16px; padding: 6px 12px; }
+  .time-controls span { font-size: 16px; }
 }
