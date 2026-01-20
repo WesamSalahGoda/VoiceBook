@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>سلسلة المحاضرات الصوتية</h1>
+  <h2>شرح كتاب الاستقامة لابن تيمية</h2>
+  <h3>للشيخ محمد سعيد رسلان</h3>
+  <p>اختر رقم المحاضرة للاستماع</p>
+
+  <div class="grid">
+    <script>
+      const baseUrl = 'https://archive.org/download/khaled_alridwany_29/';
+      for (let i = 1; i <= 40; i++) {
+        const fileName = (function getFileName(i, type, prefix) {
+  if (type === "pad") return String(i).padStart(2, '0') + ".mp3";
+  if (type === "normal") return i + ".mp3";
+  if (type === "text") return prefix + i + ".mp3";
+})(i, 'text', 'شرح كتاب الاستقامة لشيخ الإسلام ابن تيمية ');
+        const audioSrc = baseUrl + fileName;
+        document.write(`
+          <a href="player.html?title=${i}&src=${encodeURIComponent(audioSrc)}">
+            <div class="btn">المحاضرة ${i}</div>
+          </a>
+        `);
+      }
+    </script>
+  </div>
+</div>
+
+</body>
+</html>
