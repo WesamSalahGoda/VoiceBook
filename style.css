@@ -1,0 +1,212 @@
+/* ===============================
+   Reset & Box Sizing
+=============================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ===============================
+   Global Styles
+=============================== */
+body {
+  margin: 0;
+  font-family: 'Cairo', Tahoma, Arial, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Typography */
+h1, h2, h3, p {
+  text-align: center;
+  margin: 0;
+}
+
+h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: normal;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+.footer {
+  margin-top: 15px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ===============================
+   Player Card
+=============================== */
+.player-card {
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  border-radius: 26px;
+  padding: 50px 30px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Logo */
+.player-card .logo {
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #ffd166;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+/* ===============================
+   Audio Player (Hidden)
+=============================== */
+.player-card audio {
+  display: none; /* يخفي المشغل الافتراضي */
+}
+
+/* ===============================
+   Custom Audio Player
+=============================== */
+.player-card .audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Play Circle */
+.player-card .play-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd166, #fca311);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1b1b1b;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+}
+
+.player-card .play-circle:hover {
+  transform: scale(1.05);
+}
+
+/* Progress Ring */
+.player-card .progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.player-card .progress-ring__circle {
+  transition: stroke-dashoffset 0.25s linear;
+  transform-origin: 50% 50%;
+  stroke-linecap: round;
+}
+
+/* Time Controls */
+.player-card .time-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-card .time-controls button {
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.player-card .time-controls button:hover {
+  background: #1565c0;
+  transform: scale(1.05);
+}
+
+.player-card .time-controls span {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+  color: #ffd166;
+}
+
+/* ===============================
+   Icon Buttons (مثل زر العودة)
+=============================== */
+.player-card .icon-btn {
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.player-card .icon-btn:hover {
+  transform: scale(1.1);
+  background: #1565c0;
+}
+
+/* ===============================
+   Responsive
+=============================== */
+@media (max-width: 480px) {
+  h2 { font-size: 20px; }
+  
+  .player-card {
+    padding: 30px 20px;
+    max-width: 95%;
+  }
+
+  .player-card .logo {
+    width: 70px;
+    height: 70px;
+  }
+
+  .player-card .play-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 28px;
+  }
+
+  .player-card .time-controls button {
+    font-size: 16px;
+    padding: 6px 12px;
+  }
+
+  .player-card .time-controls span {
+    font-size: 16px;
+  }
+}
