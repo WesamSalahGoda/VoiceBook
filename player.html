@@ -6,80 +6,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <div class="player-card">
+<div class="player-card">
 
-    <img src="VoiceBook.png" alt="صورة" class="logo">
+  <!-- رقم المحاضرة -->
+  <h2 id="title">تحميل المحاضرة...</h2>
 
-    <h2 id="title">تحميل المحاضرة...</h2>
-
-    <audio id="audio" controls autoplay></audio>
-
-    <!-- Controls: زر العودة + العداد -->
-    <div class="controls">
-      <button class="icon-btn" onclick="history.back()">⏎</button>
-
-      <div class="time-controller-inline">
-        <button class="control-btn" onclick="decreaseTime()">➖</button>
-        <span id="timeValue">0</span>
-        <button class="control-btn" onclick="increaseTime()">➕</button>
-        <button class="control-btn go-btn" onclick="goToTime()">GO</button>
-      </div>
+  <!-- مشغل بصري -->
+  <div class="audio-player">
+    <!-- زر دائري للتشغيل -->
+    <div class="play-circle" id="playBtn">
+      ▶
+      <svg class="progress-ring" width="120" height="120">
+        <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
+      </svg>
     </div>
 
-    <div class="footer">مكتبة الكتب الصوتية</div>
-    <div class="footer">إعداد - م / وسام صلاح جودة</div>
-
+    <!-- أزرار التحكم بالوقت -->
+    <div class="time-controls">
+      <button onclick="decreaseTime()">➖</button>
+      <span id="timeValue">0</span>
+      <button onclick="increaseTime()">➕</button>
+    </div>
   </div>
 
-  <!-- جلب بيانات المحاضرة -->
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const title = params.get('title') || '';
-    const src = params.get('src');
+  <audio id="audio" src="" preload="metadata"></audio>
 
-    document.getElementById('title').textContent = `المحاضرة رقم ${title}`;
-    document.getElementById('audio').src = src;
-  </script>
+  <div class="footer">مكتبة الكتب الصوتية</div>
+  <div class="footer">إعداد : م / وسام صلاح جودة</div>
 
-  <!-- كود التحكم في العداد بالدقائق -->
-  <script>
-    const audio = document.getElementById('audio');
-    const timeValueEl = document.getElementById('timeValue');
+</div>
 
-    let currentMinutes = 0; 
-    let maxMinutes = 0;     
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const title = params.get('title') || '';
+  const src = params.get('src') || '';
 
-    audio.addEventListener('loadedmetadata', () => {
-      maxMinutes = Math.floor(audio.duration / 60);
-      if (maxMinutes < 1) maxMinutes = 1;
-    });
+  document.getElementById('title').textContent = `المحاضرة رقم ${title}`;
+  const audio = document.getElementById('audio');
+  audio.src = src;
 
-    function increaseTime() {
-      if (currentMinutes < maxMinutes) {
-        currentMinutes++;
-        updateTime();
-      }
+  // العداد بالدقائق
+  const timeValueEl = document.getElementById('timeValue');
+  let currentMinutes = 0;
+  let maxMinutes = 0;
+
+  audio.addEventListener('loadedmetadata', () => {
+    maxMinutes = Math.floor(audio.duration / 60);
+    if(maxMinutes < 1) maxMinutes = 1;
+  });
+
+  function increaseTime(){
+    if(currentMinutes < maxMinutes){
+      currentMinutes++;
+      updateTime();
     }
-
-    function decreaseTime() {
-      if (currentMinutes > 0) {
-        currentMinutes--;
-        updateTime();
-      }
+  }
+  function decreaseTime(){
+    if(currentMinutes > 0){
+      currentMinutes--;
+      updateTime();
     }
+  }
+  function updateTime(){
+    timeValueEl.textContent = currentMinutes;
+  }
 
-    function goToTime() {
-      audio.currentTime = currentMinutes * 60;
+  // زر التشغيل مع حلقة التقدم
+  const playBtn = document.getElementById('playBtn');
+  const progressCircle = document.querySelector('.progress-ring__circle');
+  const radius = progressCircle.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+  progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+  progressCircle.style.strokeDashoffset = circumference;
+
+  function setProgress(percent){
+    const offset = circumference - percent / 100 * circumference;
+    progressCircle.style.strokeDashoffset = offset;
+  }
+
+  playBtn.addEventListener('click', () => {
+    if(audio.paused){
       audio.play();
+      playBtn.textContent = '⏸';
+    } else {
+      audio.pause();
+      playBtn.textContent = '▶';
     }
+  });
 
-    function updateTime() {
-      timeValueEl.textContent = currentMinutes;
-    }
-  </script>
+  // تحديث الحلقة أثناء التشغيل
+  audio.addEventListener('timeupdate', () => {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    setProgress(percent);
+  });
+
+  // تقديم / تأخير بالدقائق
+  function goToTime(minutes){
+    audio.currentTime = minutes * 60;
+  }
+</script>
 
 </body>
 </html>
