@@ -15,18 +15,13 @@
 
     <h2 id="title">تحميل المحاضرة...</h2>
 
-    <audio id="audio" controls autoplay style="width:100%; max-width:600px;"></audio>
-
+    <audio id="audio" controls autoplay></audio>
 
     <!-- Controls: زر العودة + العداد -->
     <div class="controls">
-      <div class="left">
-        <!-- زر العودة -->
-        <button class="control-btn" onclick="history.back()">⏎</button>
-      </div>
+      <button class="icon-btn" onclick="history.back()">⏎</button>
 
-      <div class="right">
-        <!-- أزرار العداد بنفس الهيكل -->
+      <div class="time-controller-inline">
         <button class="control-btn" onclick="decreaseTime()">➖</button>
         <span id="timeValue">0</span>
         <button class="control-btn" onclick="increaseTime()">➕</button>
@@ -35,7 +30,7 @@
     </div>
 
     <div class="footer">مكتبة الكتب الصوتية</div>
-    <div class="footer">إعداد  م / وسام صلاح جودة</div>
+    <div class="footer">إعداد - م / وسام صلاح جودة</div>
 
   </div>
 
@@ -54,8 +49,8 @@
     const audio = document.getElementById('audio');
     const timeValueEl = document.getElementById('timeValue');
 
-    let currentMinutes = 0; // عدد الدقائق
-    let maxMinutes = 0;     // الحد الأقصى بالدقائق
+    let currentMinutes = 0; 
+    let maxMinutes = 0;     
 
     audio.addEventListener('loadedmetadata', () => {
       maxMinutes = Math.floor(audio.duration / 60);
