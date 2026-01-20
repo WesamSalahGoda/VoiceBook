@@ -25,13 +25,23 @@
         <button class="icon-btn" onclick="rotateOff()">🔃</button>
         <button class="icon-btn" onclick="history.back()">⏎</button>
       </div>
-        <div class="footer">مكتبة الكتب الصوتية</div>
-        <div class="footer">من إعداد : م / وسام صلاح جودة</div>
+
+      <!-- عداد الزمن -->
+      <div class="time-controller">
+        <button onclick="decreaseTime()">➖</button>
+        <span id="timeValue">0</span>
+        <button onclick="increaseTime()">➕</button>
+        <button class="go-btn" onclick="goToTime()">GO</button>
+      </div>
+
+      <div class="footer">مكتبة الكتب الصوتية</div>
+      <div class="footer">من إعداد : م / وسام صلاح جودة</div>
+
     </div>
 
   </div>
 
-  <!-- كود جلب بيانات المحاضرة -->
+  <!-- جلب بيانات المحاضرة -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const title = params.get('title') || '';
@@ -41,31 +51,56 @@
     document.getElementById('audio').src = src;
   </script>
 
+  <!-- كود التحكم في العداد -->
+  <script>
+    const audio = document.getElementById('audio');
+    const timeValueEl = document.getElementById('timeValue');
+
+    let currentTimeValue = 0;
+    let maxDuration = 0;
+
+    audio.addEventListener('loadedmetadata', () => {
+      maxDuration = Math.floor(audio.duration);
+    });
+
+    function increaseTime() {
+      if (currentTimeValue < maxDuration) {
+        currentTimeValue++;
+        updateTime();
+      }
+    }
+
+    function decreaseTime() {
+      if (currentTimeValue > 0) {
+        currentTimeValue--;
+        updateTime();
+      }
+    }
+
+    function goToTime() {
+      audio.currentTime = currentTimeValue;
+      audio.play();
+    }
+
+    function updateTime() {
+      timeValueEl.textContent = currentTimeValue;
+    }
+  </script>
+
   <!-- كود الدوران -->
   <script>
-  const wrapper = document.getElementById('rotate-wrapper');
+    const wrapper = document.getElementById('rotate-wrapper');
 
-function rotateOn() {
-  wrapper.classList.add('landscape');
-  document.body.classList.add('no-scroll', 'landscape-active');
-}
+    function rotateOn() {
+      wrapper.classList.add('landscape');
+      document.body.classList.add('no-scroll', 'landscape-active');
+    }
 
-function rotateOff() {
-  wrapper.classList.remove('landscape');
-  document.body.classList.remove('no-scroll', 'landscape-active');
-}
-
-</script>
+    function rotateOff() {
+      wrapper.classList.remove('landscape');
+      document.body.classList.remove('no-scroll', 'landscape-active');
+    }
+  </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
