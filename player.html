@@ -17,20 +17,21 @@
 
     <audio id="audio" controls autoplay></audio>
 
+    <!-- صف الزر والعداد -->
     <div class="controls">
       <button class="icon-btn" onclick="history.back()">⏎</button>
-    </div>
 
-    <!-- عداد الزمن -->
-    <div class="time-controller">
-      <button onclick="decreaseTime()">➖</button>
-      <span id="timeValue">0</span>
-      <button onclick="increaseTime()">➕</button>
-      <button class="go-btn" onclick="goToTime()">GO</button>
+      <!-- عداد الزمن بجانب زر العودة -->
+      <div class="time-controller-inline">
+        <button onclick="decreaseTime()">➖</button>
+        <span id="timeValue">0</span>
+        <button onclick="increaseTime()">➕</button>
+        <button class="go-btn" onclick="goToTime()">GO</button>
+      </div>
     </div>
 
     <div class="footer">مكتبة الكتب الصوتية</div>
-    <div class="footer">إعداد : م / وسام صلاح جودة</div>
+    <div class="footer">من إعداد : م / وسام صلاح جودة</div>
 
   </div>
 
