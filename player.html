@@ -10,28 +10,46 @@
 
 <div class="player-card">
 
-  <!-- رقم المحاضرة -->
+  <!-- عنوان المحاضرة -->
   <h2 id="title">تحميل المحاضرة...</h2>
 
-  <!-- مشغل بصري -->
+  <!-- المشغل البصري -->
   <div class="audio-player">
-    <!-- زر دائري للتشغيل -->
-    <div class="play-circle" id="playBtn">
-      ▶
-      <svg class="progress-ring" width="120" height="120">
-        <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
-      </svg>
+
+    <!-- صف الوقت + زر التشغيل -->
+    <div class="player-time-row">
+
+      <!-- الوقت الحالي -->
+      <span id="currentTimeLabel">00:00:00</span>
+
+      <!-- زر التشغيل -->
+      <div class="play-circle" id="playBtn">
+        ▶
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="progress-ring__circle"
+                  stroke="#ffd166"
+                  stroke-width="6"
+                  fill="transparent"
+                  r="54" cx="60" cy="60"/>
+        </svg>
+      </div>
+
+      <!-- المدة الكاملة -->
+      <span id="durationLabel">00:00:00</span>
+
     </div>
 
-    <!-- أزرار التحكم بالوقت -->
+    <!-- التحكم بالدقائق -->
     <div class="time-controls">
       <button onclick="decreaseTime()">➖</button>
       <span id="timeValue">0</span>
       <button onclick="increaseTime()">➕</button>
     </div>
+
   </div>
 
-  <audio id="audio" src="" preload="metadata"></audio>
+  <!-- مشغل الصوت الحقيقي -->
+  <audio id="audio" preload="metadata"></audio>
 
   <div class="footer">مكتبة الكتب الصوتية</div>
   <div class="footer">إعداد : م / وسام صلاح جودة</div>
@@ -39,55 +57,93 @@
 </div>
 
 <script>
+  /* ===============================
+     جلب بيانات المحاضرة
+  =============================== */
   const params = new URLSearchParams(window.location.search);
   const title = params.get('title') || '';
   const src = params.get('src') || '';
 
   document.getElementById('title').textContent = `المحاضرة رقم ${title}`;
+
   const audio = document.getElementById('audio');
   audio.src = src;
 
-  // العداد بالدقائق
+  /* ===============================
+     تنسيق الوقت HH:MM:SS
+  =============================== */
+  function formatTime(totalSeconds) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+
+    return (
+      String(hours).padStart(2, '0') + ':' +
+      String(minutes).padStart(2, '0') + ':' +
+      String(seconds).padStart(2, '0')
+    );
+  }
+
+  const currentTimeLabel = document.getElementById('currentTimeLabel');
+  const durationLabel = document.getElementById('durationLabel');
+
+  audio.addEventListener('loadedmetadata', () => {
+    durationLabel.textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    currentTimeLabel.textContent = formatTime(audio.currentTime);
+  });
+
+  /* ===============================
+     العداد بالدقائق
+  =============================== */
   const timeValueEl = document.getElementById('timeValue');
   let currentMinutes = 0;
   let maxMinutes = 0;
 
   audio.addEventListener('loadedmetadata', () => {
     maxMinutes = Math.floor(audio.duration / 60);
-    if(maxMinutes < 1) maxMinutes = 1;
+    if (maxMinutes < 1) maxMinutes = 1;
   });
 
-  function increaseTime(){
-    if(currentMinutes < maxMinutes){
+  function increaseTime() {
+    if (currentMinutes < maxMinutes) {
       currentMinutes++;
-      updateTime();
+      updateMinuteLabel();
     }
-  }
-  function decreaseTime(){
-    if(currentMinutes > 0){
-      currentMinutes--;
-      updateTime();
-    }
-  }
-  function updateTime(){
-    timeValueEl.textContent = currentMinutes;
   }
 
-  // زر التشغيل مع حلقة التقدم
+  function decreaseTime() {
+    if (currentMinutes > 0) {
+      currentMinutes--;
+      updateMinuteLabel();
+    }
+  }
+
+  function updateMinuteLabel() {
+    timeValueEl.textContent = currentMinutes;
+    audio.currentTime = currentMinutes * 60;
+  }
+
+  /* ===============================
+     زر التشغيل + الحلقة
+  =============================== */
   const playBtn = document.getElementById('playBtn');
   const progressCircle = document.querySelector('.progress-ring__circle');
   const radius = progressCircle.r.baseVal.value;
   const circumference = 2 * Math.PI * radius;
+
   progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
   progressCircle.style.strokeDashoffset = circumference;
 
-  function setProgress(percent){
-    const offset = circumference - percent / 100 * circumference;
+  function setProgress(percent) {
+    const offset = circumference - (percent / 100) * circumference;
     progressCircle.style.strokeDashoffset = offset;
   }
 
   playBtn.addEventListener('click', () => {
-    if(audio.paused){
+    if (audio.paused) {
       audio.play();
       playBtn.textContent = '⏸';
     } else {
@@ -96,19 +152,11 @@
     }
   });
 
-  // تحديث الحلقة أثناء التشغيل
   audio.addEventListener('timeupdate', () => {
     const percent = (audio.currentTime / audio.duration) * 100;
     setProgress(percent);
   });
-
-  // تقديم / تأخير بالدقائق
-  function goToTime(minutes){
-    audio.currentTime = minutes * 60;
-  }
 </script>
 
 </body>
 </html>
-
-
