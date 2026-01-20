@@ -41,9 +41,9 @@
 
     <!-- التحكم بالدقائق -->
     <div class="time-controls">
-      <button onclick="decreaseTime()">➖</button>
+      <button id="minusBtn" onclick="decreaseTime()">➖</button>
       <span id="timeValue">0</span>
-      <button onclick="increaseTime()">➕</button>
+      <button id="plusBtn" onclick="increaseTime()">➕</button>
     </div>
 
   </div>
@@ -99,6 +99,9 @@
      العداد بالدقائق
   =============================== */
   const timeValueEl = document.getElementById('timeValue');
+  const plusBtn = document.getElementById('plusBtn');
+  const minusBtn = document.getElementById('minusBtn');
+
   let currentMinutes = 0;
   let maxMinutes = 0;
 
@@ -108,6 +111,8 @@
   });
 
   function increaseTime() {
+    if (!audio.paused) return; // ❌ لا يعمل أثناء التشغيل
+
     if (currentMinutes < maxMinutes) {
       currentMinutes++;
       updateMinuteLabel();
@@ -115,6 +120,8 @@
   }
 
   function decreaseTime() {
+    if (!audio.paused) return; // ❌ لا يعمل أثناء التشغيل
+
     if (currentMinutes > 0) {
       currentMinutes--;
       updateMinuteLabel();
@@ -124,6 +131,19 @@
   function updateMinuteLabel() {
     timeValueEl.textContent = currentMinutes;
     audio.currentTime = currentMinutes * 60;
+  }
+
+  /* ===============================
+     تعطيل / تفعيل أزرار الدقائق
+  =============================== */
+  function setMinuteButtonsState(disabled) {
+    plusBtn.disabled = disabled;
+    minusBtn.disabled = disabled;
+
+    plusBtn.style.opacity = disabled ? '0.5' : '1';
+    minusBtn.style.opacity = disabled ? '0.5' : '1';
+    plusBtn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+    minusBtn.style.cursor = disabled ? 'not-allowed' : 'pointer';
   }
 
   /* ===============================
@@ -146,9 +166,11 @@
     if (audio.paused) {
       audio.play();
       playBtn.textContent = '⏸';
+      setMinuteButtonsState(true);   // 🔒 قفل الأزرار
     } else {
       audio.pause();
       playBtn.textContent = '▶';
+      setMinuteButtonsState(false);  // 🔓 فتح الأزرار
     }
   });
 
