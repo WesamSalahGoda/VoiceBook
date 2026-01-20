@@ -9,35 +9,28 @@
 
 <body>
 
-  <!-- Wrapper خاص بالدوران -->
-  <div id="rotate-wrapper">
+  <div class="player-card">
 
-    <div class="player-card">
+    <img src="VoiceBook.png" alt="صورة" class="logo">
 
-      <img src="VoiceBook.png" alt="صورة" class="logo">
+    <h2 id="title">تحميل المحاضرة...</h2>
 
-      <h2 id="title">تحميل المحاضرة...</h2>
+    <audio id="audio" controls autoplay></audio>
 
-      <audio id="audio" controls autoplay></audio>
+    <!-- Controls: زر العودة + العداد -->
+    <div class="controls">
+      <button class="icon-btn" onclick="history.back()">⏎</button>
 
-      <div class="controls">
-        <button class="icon-btn" onclick="rotateOn()">🔁</button>
-        <button class="icon-btn" onclick="rotateOff()">🔃</button>
-        <button class="icon-btn" onclick="history.back()">⏎</button>
-      </div>
-
-      <!-- عداد الزمن -->
-      <div class="time-controller">
+      <div class="time-controller-inline">
         <button onclick="decreaseTime()">➖</button>
         <span id="timeValue">0</span>
         <button onclick="increaseTime()">➕</button>
         <button class="go-btn" onclick="goToTime()">GO</button>
       </div>
-
-      <div class="footer">مكتبة الكتب الصوتية</div>
-      <div class="footer">من إعداد : م / وسام صلاح جودة</div>
-
     </div>
+
+    <div class="footer">مكتبة الكتب الصوتية</div>
+    <div class="footer">من إعداد : م / وسام صلاح جودة</div>
 
   </div>
 
@@ -51,44 +44,43 @@
     document.getElementById('audio').src = src;
   </script>
 
-  <!-- كود التحكم في العداد -->
+  <!-- كود التحكم في العداد بالدقائق -->
   <script>
-  const audio = document.getElementById('audio');
-  const timeValueEl = document.getElementById('timeValue');
+    const audio = document.getElementById('audio');
+    const timeValueEl = document.getElementById('timeValue');
 
-  let currentMinutes = 0; // عدد الدقائق
-  let maxMinutes = 0;     // الحد الأقصى بالدقائق
+    let currentMinutes = 0; // عدد الدقائق
+    let maxMinutes = 0;     // الحد الأقصى بالدقائق
 
-  // عند تحميل الصوت نحسب الحد الأقصى بالدقائق
-  audio.addEventListener('loadedmetadata', () => {
-    maxMinutes = Math.floor(audio.duration / 60); // مدة الصوت بالدقائق
-    if (maxMinutes < 1) maxMinutes = 1; // الحد الأدنى دقيقة واحدة
-  });
+    // عند تحميل الصوت نحسب الحد الأقصى بالدقائق
+    audio.addEventListener('loadedmetadata', () => {
+      maxMinutes = Math.floor(audio.duration / 60); // مدة الصوت بالدقائق
+      if (maxMinutes < 1) maxMinutes = 1; // الحد الأدنى دقيقة واحدة
+    });
 
-  function increaseTime() {
-    if (currentMinutes < maxMinutes) {
-      currentMinutes++;
-      updateTime();
+    function increaseTime() {
+      if (currentMinutes < maxMinutes) {
+        currentMinutes++;
+        updateTime();
+      }
     }
-  }
 
-  function decreaseTime() {
-    if (currentMinutes > 0) {
-      currentMinutes--;
-      updateTime();
+    function decreaseTime() {
+      if (currentMinutes > 0) {
+        currentMinutes--;
+        updateTime();
+      }
     }
-  }
 
-  function goToTime() {
-    audio.currentTime = currentMinutes * 60; // تحويل دقائق → ثواني
-    audio.play();
-  }
+    function goToTime() {
+      audio.currentTime = currentMinutes * 60; // تحويل دقائق → ثواني
+      audio.play();
+    }
 
-  function updateTime() {
-    timeValueEl.textContent = currentMinutes;
-  }
-</script>
-
+    function updateTime() {
+      timeValueEl.textContent = currentMinutes;
+    }
+  </script>
 
 </body>
 </html>
