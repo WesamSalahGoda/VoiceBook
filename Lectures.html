@@ -2,62 +2,43 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>مكتبتي المحاضرات الصوتية</title>
+  <title>مكتبة المحاضرات الصوتية</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="container">
-    <!-- إضافة اللوجو -->
-    <img src="https://via.placeholder.com/80" alt="Logo" class="logo">
-    
-    <h1 id="bookTitle">مكتبتي المحاضرات الصوتية</h1>
+    <h1 id="bookTitle">مكتبة المحاضرات الصوتية</h1>
     <h2 id="bookName">تحميل الكتاب...</h2>
     <h3 id="bookSheikh"></h3>
     <p>اختر رقم المحاضرة للاستماع</p>
 
-    <!-- تغيير grid إلى books -->
-    <div id="books"></div>
-    
-    <!-- إضافة الفوتر -->
-    <div class="footer">
-      جميع الحقوق محفوظة © مكتبة المحاضرات الصوتية
-    </div>
+    <div class="grid" id="lecturesGrid"></div>
   </div>
 
-  <!-- كارت المشغل -->
+  <!-- كارت المشغل واحد فقط -->
   <div class="player-card" id="playerCard" style="display:none;">
     <button class="close-btn" onclick="closePlayer()">×</button>
-    
-    <!-- إضافة صورة الكتاب في المشغل -->
-    <img src="https://via.placeholder.com/80" alt="Book Cover" class="logo">
-    
-    <!-- تغيير الهيكل ليتناسب مع الستايل -->
-    <div class="audio-player">
-      <div class="time-labels">
-        <span id="currentTimeLabel">00:00:00</span>
-        <div class="play-circle" id="playBtn">
-          ▶
-          <!-- إضافة دائرة التقدم -->
-          <svg class="progress-ring" width="120" height="120">
-            <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
-          </svg>
-        </div>
-        <span id="durationLabel">00:00:00</span>
+    <div class="player-time-row">
+      <span id="currentTimeLabel">00:00:00</span>
+      <div class="play-circle" id="playBtn">▶
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
+        </svg>
       </div>
-      <div class="time-controls">
-        <button onclick="decreaseTime()">➖</button>
-        <span id="timeValue">0</span>
-        <button onclick="increaseTime()">➕</button>
-      </div>
+      <span id="durationLabel">00:00:00</span>
     </div>
-    
+    <div class="time-controls">
+      <button onclick="decreaseTime()">➖</button>
+      <span id="timeValue">0</span>
+      <button onclick="increaseTime()">➕</button>
+    </div>
     <audio id="audio" preload="metadata"></audio>
   </div>
 
 <script>
-const booksContainer = document.getElementById('books');
+const lecturesGrid = document.getElementById('lecturesGrid');
 const playerCard = document.getElementById('playerCard');
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
@@ -95,7 +76,7 @@ fetch(sheetUrl)
                      .find(cols => cols[colIndex.ID] === bookID);
 
     if(!book){
-      booksContainer.innerHTML = "<p>الكتاب غير موجود</p>";
+      lecturesGrid.innerHTML = "<p>الكتاب غير موجود</p>";
       return;
     }
 
@@ -107,122 +88,71 @@ fetch(sheetUrl)
 
     document.getElementById("bookName").textContent = bookName;
     document.getElementById("bookSheikh").textContent = `للشيخ ${bookSheikh}`;
-    document.getElementById("bookTitle").textContent = bookName;
 
-    // توليد أزرار المحاضرات كروابط (book)
+    // توليد أزرار المحاضرات بشكل جذاب
     for(let i=1; i<=lecturesCount; i++){
       let num = i;
 
       // تحديد اسم الملف الصحيح
       let nameParts = fileName.split(".");
-      let base = nameParts[0].replace(/\d+$/, ""); // النص قبل الرقم
-      let ext  = nameParts[1] || "mp3"; // الامتداد
+      let base = nameParts[0].replace(/\d+$/, "");
+      let ext  = nameParts[1] || "mp3";
       let fileNum = i;
       if(base.length===0 && fileName.length>=5) fileNum = String(i).padStart(2,"0");
       const audioSrc = `${folderUrl}${base}${fileNum}.${ext}`;
 
-      // إنشاء رابط لكل محاضرة (باستخدام فئة book)
-      const bookLink = document.createElement("a");
-      bookLink.className = "book";
-      bookLink.href = "#";
-      
-      // إضافة محتوى الرابط
-      const titleDiv = document.createElement("div");
-      titleDiv.className = "book-title";
-      titleDiv.textContent = `المحاضرة ${i}`;
-      
-      const descDiv = document.createElement("div");
-      descDiv.className = "book-desc";
-      descDiv.textContent = `الجزء ${i}`;
-      
-      bookLink.appendChild(titleDiv);
-      bookLink.appendChild(descDiv);
-      
-      // إضافة حدث النقر
-      bookLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        openPlayer(i, audioSrc, bookName);
-      });
-      
-      booksContainer.appendChild(bookLink);
+      // إنشاء الزر
+      const btn = document.createElement("div");
+      btn.className = "book";
+      btn.innerHTML = `
+        <div class="book-title">المحاضرة ${i}</div>
+        <div class="book-desc">اضغط للتشغيل</div>
+      `;
+      btn.onclick = () => openPlayer(i, audioSrc, btn);
+      lecturesGrid.appendChild(btn);
     }
 
   })
-  .catch(err => {
-    console.error(err);
-    booksContainer.innerHTML = "<p class='book-desc'>حدث خطأ في تحميل البيانات</p>";
-  });
+  .catch(err => console.error(err));
 
 // وظائف المشغل
-function openPlayer(lectureNum, src, bookName){
+function openPlayer(title, src, btn){
   stopAudio();
   audio.src = src;
-  
-  // تحديث عنوان المشغل
-  const playerTitle = document.getElementById('bookTitle');
-  if(playerTitle) {
-    playerTitle.textContent = `${bookName} - المحاضرة ${lectureNum}`;
-  }
-  
-  // إظهار المشغل
-  playerCard.style.display = "flex";
-  
-  // نقل المشغل إلى نهاية body
-  document.body.appendChild(playerCard);
-  
+  playerCard.style.display = "block";
+  btn.after(playerCard);
+  document.getElementById('bookTitle').textContent = `المحاضرة رقم ${title}`;
   audio.load();
   audio.pause();
   playBtn.textContent = "▶";
   currentMinutes = 0;
   timeValueEl.textContent = currentMinutes;
-  
-  // إضافة دائرة التقدم
-  setupProgressRing();
 }
 
 function closePlayer(){
-  stopAudio();
+  audio.pause();
   playerCard.style.display = "none";
 }
 
-// إعداد دائرة التقدم
-function setupProgressRing(){
-  const progressCircle = document.querySelector('.progress-ring__circle');
-  if(!progressCircle) return;
-  
-  const radius = progressCircle.r.baseVal.value;
-  const circumference = 2 * Math.PI * radius;
-  progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-  progressCircle.style.strokeDashoffset = circumference;
-  
-  // دالة تحديث التقدم
-  function setProgress(percent){
-    const offset = circumference - (percent/100)*circumference;
-    progressCircle.style.strokeDashoffset = offset;
-  }
-  
-  return setProgress;
+// حلقة التقدم
+const progressCircle = document.querySelector('.progress-ring__circle');
+const radius = progressCircle.r.baseVal.value;
+const circumference = 2 * Math.PI * radius;
+progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+progressCircle.style.strokeDashoffset = circumference;
+function setProgress(percent){
+  const offset = circumference - (percent/100)*circumference;
+  progressCircle.style.strokeDashoffset = offset;
 }
 
-// التحكم في التشغيل
 playBtn.addEventListener("click", ()=>{
-  if(audio.paused){ 
-    audio.play(); 
-    playBtn.textContent = '⏸'; 
-  }
-  else { 
-    audio.pause(); 
-    playBtn.textContent = '▶'; 
-  }
+  if(audio.paused){ audio.play(); playBtn.textContent='⏸'; }
+  else { audio.pause(); playBtn.textContent='▶'; }
 });
 
-// تحديث الوقت والتقدم
 audio.addEventListener("timeupdate", ()=>{
-  const setProgress = setupProgressRing();
-  if(setProgress && audio.duration > 0){
-    const percent = (audio.currentTime/audio.duration)*100;
-    setProgress(percent);
-  }
+  const percent = (audio.currentTime/audio.duration)*100;
+  setProgress(percent);
   currentTimeLabel.textContent = formatTime(audio.currentTime);
 });
 
@@ -232,28 +162,11 @@ audio.addEventListener("loadedmetadata", ()=>{
   durationLabel.textContent = formatTime(audio.duration);
 });
 
-// التحكم بالوقت
-function increaseTime(){ 
-  if(audio.paused && currentMinutes<maxMinutes){ 
-    currentMinutes++; 
-    updateMinuteLabel(); 
-  } 
-}
+// عداد بالدقائق
+function increaseTime(){ if(audio.paused && currentMinutes<maxMinutes){ currentMinutes++; updateMinuteLabel(); } }
+function decreaseTime(){ if(audio.paused && currentMinutes>0){ currentMinutes--; updateMinuteLabel(); } }
+function updateMinuteLabel(){ timeValueEl.textContent = currentMinutes; audio.currentTime = currentMinutes*60; }
 
-function decreaseTime(){ 
-  if(audio.paused && currentMinutes>0){ 
-    currentMinutes--; 
-    updateMinuteLabel(); 
-  } 
-}
-
-function updateMinuteLabel(){ 
-  timeValueEl.textContent = currentMinutes; 
-  audio.currentTime = currentMinutes*60; 
-  currentTimeLabel.textContent = formatTime(audio.currentTime);
-}
-
-// تنسيق الوقت
 function formatTime(totalSeconds){
   const hours = Math.floor(totalSeconds/3600);
   const minutes = Math.floor((totalSeconds%3600)/60);
@@ -261,24 +174,9 @@ function formatTime(totalSeconds){
   return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
 }
 
-function stopAudio(){ 
-  audio.pause(); 
-  playBtn.textContent='▶'; 
-  currentMinutes = 0;
-  timeValueEl.textContent = currentMinutes;
-}
-
-// تحميل الصفحة
-window.addEventListener('load', () => {
-  // إذا كان هناك صورة لوجو في المشغل
-  const logoImg = document.querySelector('.player-card .logo');
-  if(logoImg) {
-    logoImg.src = document.querySelector('.container .logo').src;
-  }
-});
+function stopAudio(){ audio.pause(); playBtn.textContent='▶'; }
 
 </script>
 
 </body>
 </html>
-
