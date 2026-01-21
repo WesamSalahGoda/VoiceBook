@@ -2,51 +2,77 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>مكتبة الكتب الصوتية</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مكتبات الكتب الصوتية</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
   <div class="container">
-    <h1>مكتبة كتب صوتية</h1>
-    <h2>اختر الكتاب للاستماع لمحاضراته</h2>
 
-    <div id="booksContainer" class="grid"></div>
+    <img src="VoiceBook.png" alt="صورة" class="logo">
+
+    <h1>مكتبات الكتب الصوتية</h1>
+    <h2>اختر أحد الكتب</h2>
+
+    <!-- الكتب ستُضاف هنا تلقائيًا -->
+    <div id="books"></div>
+
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <script>
-    const booksContainer = document.getElementById('booksContainer');
+<script>
+const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv";
 
-    // رابط CSV من Google Sheet
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv";
+fetch(sheetUrl)
+  .then(res => res.text())
+  .then(csv => {
+    const lines = csv.trim().split("\n");
 
-    // تحميل CSV وتحويله لمصفوفة كتب
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        const books = results.data;
+    // تنظيف أسماء الأعمدة (إزالة BOM والمسافات)
+    const headers = lines[0]
+      .replace(/\uFEFF/g, "")
+      .split(",")
+      .map(h => h.trim());
 
-        books.forEach((book) => {
-          const btn = document.createElement('div');
-          btn.className = 'btn';
-          btn.innerHTML = `
-            <h3>${book.book}</h3>
-            <p>للشيخ: ${book.sheikh}</p>
-            <p>عدد المحاضرات: ${book.count}</p>
-          `;
-          btn.onclick = () => {
-            // الانتقال إلى صفحة Lectures.html مع تمرير ID الكتاب
-            window.location.href = `Lectures.html?book=${book.ID}`;
-          };
-          booksContainer.appendChild(btn);
-        });
-      }
+    const rows = lines.slice(1);
+
+    // نضيف index لكل عمود بما فيهم ID الجديد
+    const colIndex = {
+      ID: headers.indexOf("ID"),         // العمود الجديد
+      book: headers.indexOf("book"),
+      sheikh: headers.indexOf("sheikh"),
+      count: headers.indexOf("count")
+    };
+
+    const container = document.getElementById("books");
+
+    rows.forEach(line => {
+      if (!line.trim()) return;
+
+      const cols = line.split(",");
+
+      const ID     = cols[colIndex.ID];    // الرقم التعريفي للكتاب
+      const book   = cols[colIndex.book];
+      const sheikh = cols[colIndex.sheikh];
+      const count  = cols[colIndex.count];
+
+      const link = document.createElement("a");
+      link.className = "book";
+
+      // الآن الرابط يشمل ID كخاصية data-id (جاهز لاحقًا لو حبينا نستخدمه)
+      link.setAttribute("data-id", ID);
+
+      link.href = book.replace(/\s+/g, "") + ".html"; // الرابط الحالي كما كان
+
+      link.innerHTML = `
+        <div class="book-title">شرح كتاب ${book}</div>
+        <div class="book-desc">${count} محاضرة صوتية للشيخ ${sheikh}</div>
+      `;
+
+      container.appendChild(link);
     });
-  </script>
-
+  })
+  .catch(err => console.error(err));
+</script>
 </body>
 </html>
-
