@@ -20,7 +20,7 @@
     const booksContainer = document.getElementById('booksContainer');
 
     // رابط CSV من Google Sheet
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv"; // ضع هنا رابط CSV الخاص بك
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv";
 
     // تحميل CSV وتحويله لمصفوفة كتب
     Papa.parse(csvUrl, {
@@ -33,8 +33,9 @@
           const btn = document.createElement('div');
           btn.className = 'btn';
           btn.innerHTML = `
-            <h3>${book.title}</h3>
-            <p>إعداد: ${book.author}</p>
+            <h3>${book.book}</h3>
+            <p>إعداد: ${book.sheikh}</p>
+            <p>عدد المحاضرات: ${book.count}</p>
           `;
           btn.onclick = () => {
             // الانتقال إلى صفحة Lectures.html مع تمرير ID الكتاب
@@ -48,6 +49,3 @@
 
 </body>
 </html>
-
-
-
