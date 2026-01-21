@@ -9,36 +9,55 @@
 <body>
 
   <div class="container">
+    <!-- إضافة اللوجو -->
+    <img src="https://via.placeholder.com/80" alt="Logo" class="logo">
+    
     <h1 id="bookTitle">مكتبة المحاضرات الصوتية</h1>
     <h2 id="bookName">تحميل الكتاب...</h2>
     <h3 id="bookSheikh"></h3>
     <p>اختر رقم المحاضرة للاستماع</p>
 
-    <div class="grid" id="lecturesGrid"></div>
+    <!-- تغيير grid إلى books -->
+    <div id="books"></div>
+    
+    <!-- إضافة الفوتر -->
+    <div class="footer">
+      جميع الحقوق محفوظة © مكتبة المحاضرات الصوتية
+    </div>
   </div>
 
-  <!-- كارت المشغل واحد فقط -->
+  <!-- كارت المشغل -->
   <div class="player-card" id="playerCard" style="display:none;">
     <button class="close-btn" onclick="closePlayer()">×</button>
-    <div class="player-time-row">
-      <span id="currentTimeLabel">00:00:00</span>
-      <div class="play-circle" id="playBtn">▶
-        <svg class="progress-ring" width="120" height="120">
-          <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
-        </svg>
+    
+    <!-- إضافة صورة الكتاب في المشغل -->
+    <img src="https://via.placeholder.com/80" alt="Book Cover" class="logo">
+    
+    <!-- تغيير الهيكل ليتناسب مع الستايل -->
+    <div class="audio-player">
+      <div class="time-labels">
+        <span id="currentTimeLabel">00:00:00</span>
+        <div class="play-circle" id="playBtn">
+          ▶
+          <!-- إضافة دائرة التقدم -->
+          <svg class="progress-ring" width="120" height="120">
+            <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
+          </svg>
+        </div>
+        <span id="durationLabel">00:00:00</span>
       </div>
-      <span id="durationLabel">00:00:00</span>
+      <div class="time-controls">
+        <button onclick="decreaseTime()">➖</button>
+        <span id="timeValue">0</span>
+        <button onclick="increaseTime()">➕</button>
+      </div>
     </div>
-    <div class="time-controls">
-      <button onclick="decreaseTime()">➖</button>
-      <span id="timeValue">0</span>
-      <button onclick="increaseTime()">➕</button>
-    </div>
+    
     <audio id="audio" preload="metadata"></audio>
   </div>
 
 <script>
-const lecturesGrid = document.getElementById('lecturesGrid');
+const booksContainer = document.getElementById('books');
 const playerCard = document.getElementById('playerCard');
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
@@ -76,7 +95,7 @@ fetch(sheetUrl)
                      .find(cols => cols[colIndex.ID] === bookID);
 
     if(!book){
-      lecturesGrid.innerHTML = "<p>الكتاب غير موجود</p>";
+      booksContainer.innerHTML = "<p>الكتاب غير موجود</p>";
       return;
     }
 
@@ -88,8 +107,9 @@ fetch(sheetUrl)
 
     document.getElementById("bookName").textContent = bookName;
     document.getElementById("bookSheikh").textContent = `للشيخ ${bookSheikh}`;
+    document.getElementById("bookTitle").textContent = bookName;
 
-    // توليد أزرار المحاضرات
+    // توليد أزرار المحاضرات كروابط (book)
     for(let i=1; i<=lecturesCount; i++){
       let num = i;
 
@@ -101,55 +121,108 @@ fetch(sheetUrl)
       if(base.length===0 && fileName.length>=5) fileNum = String(i).padStart(2,"0");
       const audioSrc = `${folderUrl}${base}${fileNum}.${ext}`;
 
-      // أنشئ زر لكل محاضرة
-      const btn = document.createElement("button");
-      btn.className = "btn";
-      btn.textContent = `المحاضرة ${i}`;
-      btn.onclick = () => openPlayer(i, audioSrc, btn);
-      lecturesGrid.appendChild(btn);
+      // إنشاء رابط لكل محاضرة (باستخدام فئة book)
+      const bookLink = document.createElement("a");
+      bookLink.className = "book";
+      bookLink.href = "#";
+      
+      // إضافة محتوى الرابط
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "book-title";
+      titleDiv.textContent = `المحاضرة ${i}`;
+      
+      const descDiv = document.createElement("div");
+      descDiv.className = "book-desc";
+      descDiv.textContent = `الجزء ${i}`;
+      
+      bookLink.appendChild(titleDiv);
+      bookLink.appendChild(descDiv);
+      
+      // إضافة حدث النقر
+      bookLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        openPlayer(i, audioSrc, bookName);
+      });
+      
+      booksContainer.appendChild(bookLink);
     }
 
   })
-  .catch(err => console.error(err));
+  .catch(err => {
+    console.error(err);
+    booksContainer.innerHTML = "<p class='book-desc'>حدث خطأ في تحميل البيانات</p>";
+  });
 
 // وظائف المشغل
-function openPlayer(title, src, btn){
+function openPlayer(lectureNum, src, bookName){
   stopAudio();
   audio.src = src;
-  playerCard.style.display = "block";
-  btn.after(playerCard);
-  document.getElementById('bookTitle').textContent = `المحاضرة رقم ${title}`;
+  
+  // تحديث عنوان المشغل
+  const playerTitle = document.getElementById('bookTitle');
+  if(playerTitle) {
+    playerTitle.textContent = `${bookName} - المحاضرة ${lectureNum}`;
+  }
+  
+  // إظهار المشغل
+  playerCard.style.display = "flex";
+  
+  // نقل المشغل إلى نهاية body
+  document.body.appendChild(playerCard);
+  
   audio.load();
   audio.pause();
   playBtn.textContent = "▶";
   currentMinutes = 0;
   timeValueEl.textContent = currentMinutes;
+  
+  // إضافة دائرة التقدم
+  setupProgressRing();
 }
 
 function closePlayer(){
-  audio.pause();
+  stopAudio();
   playerCard.style.display = "none";
 }
 
-// حلقة التقدم
-const progressCircle = document.querySelector('.progress-ring__circle');
-const radius = progressCircle.r.baseVal.value;
-const circumference = 2 * Math.PI * radius;
-progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-progressCircle.style.strokeDashoffset = circumference;
-function setProgress(percent){
-  const offset = circumference - (percent/100)*circumference;
-  progressCircle.style.strokeDashoffset = offset;
+// إعداد دائرة التقدم
+function setupProgressRing(){
+  const progressCircle = document.querySelector('.progress-ring__circle');
+  if(!progressCircle) return;
+  
+  const radius = progressCircle.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+  progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+  progressCircle.style.strokeDashoffset = circumference;
+  
+  // دالة تحديث التقدم
+  function setProgress(percent){
+    const offset = circumference - (percent/100)*circumference;
+    progressCircle.style.strokeDashoffset = offset;
+  }
+  
+  return setProgress;
 }
 
+// التحكم في التشغيل
 playBtn.addEventListener("click", ()=>{
-  if(audio.paused){ audio.play(); playBtn.textContent='⏸'; }
-  else { audio.pause(); playBtn.textContent='▶'; }
+  if(audio.paused){ 
+    audio.play(); 
+    playBtn.textContent = '⏸'; 
+  }
+  else { 
+    audio.pause(); 
+    playBtn.textContent = '▶'; 
+  }
 });
 
+// تحديث الوقت والتقدم
 audio.addEventListener("timeupdate", ()=>{
-  const percent = (audio.currentTime/audio.duration)*100;
-  setProgress(percent);
+  const setProgress = setupProgressRing();
+  if(setProgress && audio.duration > 0){
+    const percent = (audio.currentTime/audio.duration)*100;
+    setProgress(percent);
+  }
   currentTimeLabel.textContent = formatTime(audio.currentTime);
 });
 
@@ -159,11 +232,28 @@ audio.addEventListener("loadedmetadata", ()=>{
   durationLabel.textContent = formatTime(audio.duration);
 });
 
-// عداد بالدقائق
-function increaseTime(){ if(audio.paused && currentMinutes<maxMinutes){ currentMinutes++; updateMinuteLabel(); } }
-function decreaseTime(){ if(audio.paused && currentMinutes>0){ currentMinutes--; updateMinuteLabel(); } }
-function updateMinuteLabel(){ timeValueEl.textContent = currentMinutes; audio.currentTime = currentMinutes*60; }
+// التحكم بالوقت
+function increaseTime(){ 
+  if(audio.paused && currentMinutes<maxMinutes){ 
+    currentMinutes++; 
+    updateMinuteLabel(); 
+  } 
+}
 
+function decreaseTime(){ 
+  if(audio.paused && currentMinutes>0){ 
+    currentMinutes--; 
+    updateMinuteLabel(); 
+  } 
+}
+
+function updateMinuteLabel(){ 
+  timeValueEl.textContent = currentMinutes; 
+  audio.currentTime = currentMinutes*60; 
+  currentTimeLabel.textContent = formatTime(audio.currentTime);
+}
+
+// تنسيق الوقت
 function formatTime(totalSeconds){
   const hours = Math.floor(totalSeconds/3600);
   const minutes = Math.floor((totalSeconds%3600)/60);
@@ -171,10 +261,23 @@ function formatTime(totalSeconds){
   return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
 }
 
-function stopAudio(){ audio.pause(); playBtn.textContent='▶'; }
+function stopAudio(){ 
+  audio.pause(); 
+  playBtn.textContent='▶'; 
+  currentMinutes = 0;
+  timeValueEl.textContent = currentMinutes;
+}
+
+// تحميل الصفحة
+window.addEventListener('load', () => {
+  // إذا كان هناك صورة لوجو في المشغل
+  const logoImg = document.querySelector('.player-card .logo');
+  if(logoImg) {
+    logoImg.src = document.querySelector('.container .logo').src;
+  }
+});
 
 </script>
 
 </body>
 </html>
-
