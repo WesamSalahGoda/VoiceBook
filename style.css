@@ -94,7 +94,7 @@ p { font-size: 14px; margin-bottom: 15px; }
   font-weight: 500;
   box-shadow: 0 6px 14px rgba(0,0,0,0.35);
   transition: transform 0.2s ease, background 0.2s ease;
-   cursor: pointer;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -269,5 +269,6 @@ p { font-size: 14px; margin-bottom: 15px; }
   .time-controls span { font-size: 16px; }
   .close-btn { width: 35px; height: 35px; font-size: 18px; }
 }
+
 
 
