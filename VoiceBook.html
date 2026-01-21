@@ -9,7 +9,7 @@
 <body>
 
   <div class="container">
-    <h1>مكتبة الكتب الصوتية</h1>
+    <h1>مكتبة كتب صوتية</h1>
     <h2>اختر الكتاب للاستماع لمحاضراته</h2>
 
     <div id="booksContainer" class="grid"></div>
@@ -20,7 +20,7 @@
     const booksContainer = document.getElementById('booksContainer');
 
     // رابط CSV من Google Sheet
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/XXX/pub?output=csv"; // ضع هنا رابط CSV الخاص بك
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv"; // ضع هنا رابط CSV الخاص بك
 
     // تحميل CSV وتحويله لمصفوفة كتب
     Papa.parse(csvUrl, {
@@ -48,4 +48,5 @@
 
 </body>
 </html>
+
 
