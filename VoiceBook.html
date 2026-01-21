@@ -38,7 +38,7 @@ fetch(sheetUrl)
 
     // نضيف index لكل عمود بما فيهم ID الجديد
     const colIndex = {
-      ID: headers.indexOf("ID"),         // العمود الجديد
+      ID: headers.indexOf("ID"),         
       book: headers.indexOf("book"),
       sheikh: headers.indexOf("sheikh"),
       count: headers.indexOf("count")
@@ -51,7 +51,7 @@ fetch(sheetUrl)
 
       const cols = line.split(",");
 
-      const ID     = cols[colIndex.ID];    // الرقم التعريفي للكتاب
+      const ID     = cols[colIndex.ID];    
       const book   = cols[colIndex.book];
       const sheikh = cols[colIndex.sheikh];
       const count  = cols[colIndex.count];
@@ -59,10 +59,11 @@ fetch(sheetUrl)
       const link = document.createElement("a");
       link.className = "book";
 
-      // الآن الرابط يشمل ID كخاصية data-id (جاهز لاحقًا لو حبينا نستخدمه)
-      link.setAttribute("data-id", ID);
+      // الرابط الآن يمرر ID للصفحة القادمة
+      link.href = `Lectures.html?book=${ID}`;
 
-      link.href = book.replace(/\s+/g, "") + ".html"; // الرابط الحالي كما كان
+      // نخزن الرقم التعريفي كخاصية data-id
+      link.setAttribute("data-id", ID);
 
       link.innerHTML = `
         <div class="book-title">شرح كتاب ${book}</div>
