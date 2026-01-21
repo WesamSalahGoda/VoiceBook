@@ -1,183 +1,33 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <title>مكتبة المحاضرات الصوتية</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>مكتبة المحاضرات الصوتية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-  <div class="container">
-    <h1 id="bookTitle">مكتبة المحاضرات الصوتية</h1>
-    <h2 id="bookName">تحميل الكتاب ...</h2>
-    <h3 id="bookSheikh"></h3>
-    <p>اختر رقم المحاضرة للاستماع</p>
-
-    <div class="grid" id="lecturesGrid"></div>
-  </div>
-
-  <!-- كارت المشغل واحد فقط -->
-  <div class="player-card" id="playerCard" style="display:none;">
-    <button class="close-btn" onclick="closePlayer()">×</button>
-    <div class="player-time-row">
-      <span id="currentTimeLabel">00:00:00</span>
-      <div class="play-circle" id="playBtn">▶
-        <svg class="progress-ring" width="120" height="120">
-          <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54" cx="60" cy="60"/>
-        </svg>
-      </div>
-      <span id="durationLabel">00:00:00</span>
+    <div class="container">
+        <h1 id="bookTitle">مكتبة المحاضرات الصوتية</h1>
+        <h2 id="bookName">تحميل الكتاب...</h2>
+        <h3 id="bookSheikh"></h3>
+        <p>اختر رقم المحاضرة للاستماع</p>
+        <div class="grid" id="lecturesGrid"></div>
+    </div> <!-- كارت المشغل واحد فقط -->
+    <div class="player-card" id="playerCard" style="display:none;"> <button class="close-btn"
+            onclick="closePlayer()">×</button>
+        <div class="player-time-row"> <span id="currentTimeLabel">00:00:00</span>
+            <div class="play-circle" id="playBtn">▶ <svg class="progress-ring" width="120" height="120">
+                    <circle class="progress-ring__circle" stroke="#ffd166" stroke-width="6" fill="transparent" r="54"
+                        cx="60" cy="60" />
+                </svg> </div> <span id="durationLabel">00:00:00</span>
+        </div>
+        <div class="time-controls"> <button onclick="decreaseTime()">➖</button> <span id="timeValue">0</span> <button
+                onclick="increaseTime()">➕</button> </div> <audio id="audio" preload="metadata"></audio>
     </div>
-    <div class="time-controls">
-      <button onclick="decreaseTime()">➖</button>
-      <span id="timeValue">0</span>
-      <button onclick="increaseTime()">➕</button>
-    </div>
-    <audio id="audio" preload="metadata"></audio>
-  </div>
-
-<script>
-const lecturesGrid = document.getElementById('lecturesGrid');
-const playerCard = document.getElementById('playerCard');
-const audio = document.getElementById('audio');
-const playBtn = document.getElementById('playBtn');
-const currentTimeLabel = document.getElementById('currentTimeLabel');
-const durationLabel = document.getElementById('durationLabel');
-const timeValueEl = document.getElementById('timeValue');
-
-let currentMinutes = 0;
-let maxMinutes = 0;
-
-// قراءة ID الكتاب من الرابط
-const params = new URLSearchParams(window.location.search);
-const bookID = params.get("book");
-
-// رابط CSV من Google Sheet
-const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv";
-
-fetch(sheetUrl)
-  .then(res => res.text())
-  .then(csv => {
-    const lines = csv.trim().split("\n");
-    const headers = lines[0].replace(/\uFEFF/g,"").split(",").map(h => h.trim());
-    const rows = lines.slice(1);
-
-    const colIndex = {
-      ID: headers.indexOf("ID"),
-      book: headers.indexOf("book"),
-      sheikh: headers.indexOf("sheikh"),
-      count: headers.indexOf("count"),
-      folderUrl: headers.indexOf("folderUrl"),
-      fileName: headers.indexOf("fileName")
-    };
-
-    const book = rows.map(line => line.split(","))
-                     .find(cols => cols[colIndex.ID] === bookID);
-
-    if(!book){
-      lecturesGrid.innerHTML = "<p>الكتاب غير موجود</p>";
-      return;
-    }
-
-    const bookName = book[colIndex.book];
-    const bookSheikh = book[colIndex.sheikh];
-    const lecturesCount = parseInt(book[colIndex.count]);
-    const folderUrl = book[colIndex.folderUrl];
-    const fileName = book[colIndex.fileName];
-
-    document.getElementById("bookName").textContent = bookName;
-    document.getElementById("bookSheikh").textContent = `للشيخ ${bookSheikh}`;
-
-    // توليد أزرار المحاضرات بشكل جذاب
-    for(let i=1; i<=lecturesCount; i++){
-      let num = i;
-
-      // تحديد اسم الملف الصحيح
-      let nameParts = fileName.split(".");
-      let base = nameParts[0].replace(/\d+$/, "");
-      let ext  = nameParts[1] || "mp3";
-      let fileNum = i;
-      if(base.length===0 && fileName.length>=5) fileNum = String(i).padStart(2,"0");
-      const audioSrc = `${folderUrl}${base}${fileNum}.${ext}`;
-
-      // إنشاء الزر
-      const btn = document.createElement("div");
-      btn.className = "book";
-      btn.innerHTML = `
-        <div class="book-title">المحاضرة ${i}</div>
-        <div class="book-desc">اضغط للتشغيل</div>
-      `;
-      btn.onclick = () => openPlayer(i, audioSrc, btn);
-      lecturesGrid.appendChild(btn);
-    }
-
-  })
-  .catch(err => console.error(err));
-
-// وظائف المشغل
-function openPlayer(title, src, btn){
-  stopAudio();
-  audio.src = src;
-  playerCard.style.display = "block";
-  btn.after(playerCard);
-  document.getElementById('bookTitle').textContent = `المحاضرة رقم ${title}`;
-  audio.load();
-  audio.pause();
-  playBtn.textContent = "▶";
-  currentMinutes = 0;
-  timeValueEl.textContent = currentMinutes;
-}
-
-function closePlayer(){
-  audio.pause();
-  playerCard.style.display = "none";
-}
-
-// حلقة التقدم
-const progressCircle = document.querySelector('.progress-ring__circle');
-const radius = progressCircle.r.baseVal.value;
-const circumference = 2 * Math.PI * radius;
-progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-progressCircle.style.strokeDashoffset = circumference;
-function setProgress(percent){
-  const offset = circumference - (percent/100)*circumference;
-  progressCircle.style.strokeDashoffset = offset;
-}
-
-playBtn.addEventListener("click", ()=>{
-  if(audio.paused){ audio.play(); playBtn.textContent='⏸'; }
-  else { audio.pause(); playBtn.textContent='▶'; }
-});
-
-audio.addEventListener("timeupdate", ()=>{
-  const percent = (audio.currentTime/audio.duration)*100;
-  setProgress(percent);
-  currentTimeLabel.textContent = formatTime(audio.currentTime);
-});
-
-audio.addEventListener("loadedmetadata", ()=>{
-  maxMinutes = Math.floor(audio.duration/60);
-  if(maxMinutes<1) maxMinutes=1;
-  durationLabel.textContent = formatTime(audio.duration);
-});
-
-// عداد بالدقائق
-function increaseTime(){ if(audio.paused && currentMinutes<maxMinutes){ currentMinutes++; updateMinuteLabel(); } }
-function decreaseTime(){ if(audio.paused && currentMinutes>0){ currentMinutes--; updateMinuteLabel(); } }
-function updateMinuteLabel(){ timeValueEl.textContent = currentMinutes; audio.currentTime = currentMinutes*60; }
-
-function formatTime(totalSeconds){
-  const hours = Math.floor(totalSeconds/3600);
-  const minutes = Math.floor((totalSeconds%3600)/60);
-  const seconds = Math.floor(totalSeconds%60);
-  return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-}
-
-function stopAudio(){ audio.pause(); playBtn.textContent='▶'; }
-
-</script>
-
+    <script> const lecturesGrid = document.getElementById('lecturesGrid'); const playerCard = document.getElementById('playerCard'); const audio = document.getElementById('audio'); const playBtn = document.getElementById('playBtn'); const currentTimeLabel = document.getElementById('currentTimeLabel'); const durationLabel = document.getElementById('durationLabel'); const timeValueEl = document.getElementById('timeValue'); let currentMinutes = 0; let maxMinutes = 0; // قراءة ID الكتاب من الرابط const params = new URLSearchParams(window.location.search); const bookID = params.get("book"); // رابط CSV من Google Sheet const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTi8zqn1us53rSDKQXYudQWh5BHNpDVJAeAK30UFhP48_MBwrXlHKoM9yevR-TUe843ZPBIVJHV_Y2m/pub?gid=0&single=true&output=csv"; fetch(sheetUrl) .then(res => res.text()) .then(csv => { const lines = csv.trim().split("\n"); const headers = lines[0].replace(/\uFEFF/g,"").split(",").map(h => h.trim()); const rows = lines.slice(1); const colIndex = { ID: headers.indexOf("ID"), book: headers.indexOf("book"), sheikh: headers.indexOf("sheikh"), count: headers.indexOf("count"), folderUrl: headers.indexOf("folderUrl"), fileName: headers.indexOf("fileName") }; const book = rows.map(line => line.split(",")) .find(cols => cols[colIndex.ID] === bookID); if(!book){ lecturesGrid.innerHTML = "<p>الكتاب غير موجود</p>"; return; } const bookName = book[colIndex.book]; const bookSheikh = book[colIndex.sheikh]; const lecturesCount = parseInt(book[colIndex.count]); const folderUrl = book[colIndex.folderUrl]; const fileName = book[colIndex.fileName]; document.getElementById("bookName").textContent = bookName; document.getElementById("bookSheikh").textContent = للشيخ ${bookSheikh}; // توليد أزرار المحاضرات for(let i=1; i<=lecturesCount; i++){ let num = i; // تحديد اسم الملف الصحيح let nameParts = fileName.split("."); let base = nameParts[0].replace(/\d+$/, ""); // النص قبل الرقم let ext = nameParts[1] || "mp3"; // الامتداد let fileNum = i; if(base.length===0 && fileName.length>=5) fileNum = String(i).padStart(2,"0"); const audioSrc = ${folderUrl}${base}${fileNum}.${ext}; // أنشئ زر لكل محاضرة const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = المحاضرة ${i}; btn.onclick = () => openPlayer(i, audioSrc, btn); lecturesGrid.appendChild(btn); } }) .catch(err => console.error(err)); // وظائف المشغل function openPlayer(title, src, btn){ stopAudio(); audio.src = src; playerCard.style.display = "block"; btn.after(playerCard); document.getElementById('bookTitle').textContent = المحاضرة رقم ${title}; audio.load(); audio.pause(); playBtn.textContent = "▶"; currentMinutes = 0; timeValueEl.textContent = currentMinutes; } function closePlayer(){ audio.pause(); playerCard.style.display = "none"; } // حلقة التقدم const progressCircle = document.querySelector('.progress-ring__circle'); const radius = progressCircle.r.baseVal.value; const circumference = 2 * Math.PI * radius; progressCircle.style.strokeDasharray = ${circumference} ${circumference}; progressCircle.style.strokeDashoffset = circumference; function setProgress(percent){ const offset = circumference - (percent/100)*circumference; progressCircle.style.strokeDashoffset = offset; } playBtn.addEventListener("click", ()=>{ if(audio.paused){ audio.play(); playBtn.textContent='⏸'; } else { audio.pause(); playBtn.textContent='▶'; } }); audio.addEventListener("timeupdate", ()=>{ const percent = (audio.currentTime/audio.duration)*100; setProgress(percent); currentTimeLabel.textContent = formatTime(audio.currentTime); }); audio.addEventListener("loadedmetadata", ()=>{ maxMinutes = Math.floor(audio.duration/60); if(maxMinutes<1) maxMinutes=1; durationLabel.textContent = formatTime(audio.duration); }); // عداد بالدقائق function increaseTime(){ if(audio.paused && currentMinutes<maxMinutes){ currentMinutes++; updateMinuteLabel(); } } function decreaseTime(){ if(audio.paused && currentMinutes>0){ currentMinutes--; updateMinuteLabel(); } } function updateMinuteLabel(){ timeValueEl.textContent = currentMinutes; audio.currentTime = currentMinutes*60; } function formatTime(totalSeconds){ const hours = Math.floor(totalSeconds/3600); const minutes = Math.floor((totalSeconds%3600)/60); const seconds = Math.floor(totalSeconds%60); return ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}; } function stopAudio(){ audio.pause(); playBtn.textContent='▶'; } </script>
 </body>
-</html>
 
+</html>
