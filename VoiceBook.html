@@ -3,20 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مكتبة كتب الصوتية</title>
+  <title>مكتبة الكتب الصوتية</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
   <div class="container">
 
-    <img src="VoiceBook.png" alt="صورة" class="logo">
+    <img src="VoiceBook.png" alt="VoiceBook Logo" class="logo">
 
     <h1>مكتبة الكتب الصوتية</h1>
-    <h2>اختر أحد الكتب</h2>
+    <h3>اختر أحد الكتب للاستماع</h3>
 
-    <!-- الكتب ستُضاف هنا تلقائيًا -->
+    <!-- قائمة الكتب -->
     <div id="books" class="grid"></div>
+
+    <div class="footer">
+      يتم التحديث تلقائيًا عند إضافة كتب جديدة
+    </div>
 
   </div>
 
@@ -41,26 +46,30 @@ fetch(sheetUrl)
 
     rows.forEach(line => {
       if (!line.trim()) return;
+
       const cols = line.split(",");
       const ID     = cols[colIndex.ID];
       const book   = cols[colIndex.book];
       const sheikh = cols[colIndex.sheikh];
       const count  = cols[colIndex.count];
 
-      // إنشاء زر الكتاب متوافق مع CSS
-      const link = document.createElement("div");
-      link.className = "book";
-      link.onclick = () => { window.location.href = `Lectures.html?book=${ID}`; };
+      // زر متوافق مع style.css
+      const btn = document.createElement("button");
+      btn.className = "btn";
+      btn.onclick = () => {
+        window.location.href = `Lectures.html?book=${ID}`;
+      };
 
-      link.innerHTML = `
-        <div class="book-title">شرح كتاب ${book}</div>
-        <div class="book-desc">${count} محاضرة صوتية للشيخ ${sheikh}</div>
+      btn.innerHTML = `
+        📘 شرح كتاب ${book}<br>
+        <small>${count} محاضرة صوتية • الشيخ ${sheikh}</small>
       `;
 
-      container.appendChild(link);
+      container.appendChild(btn);
     });
   })
   .catch(err => console.error(err));
 </script>
+
 </body>
 </html>
