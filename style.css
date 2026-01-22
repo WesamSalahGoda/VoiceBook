@@ -43,7 +43,7 @@ p { font-size: 14px; margin-bottom: 15px; }
    Container
 =============================== */
 .container {
-  width: 100%;
+  width: 90%;
   max-width: 520px;
   display: flex;
   flex-direction: column;
@@ -269,6 +269,7 @@ p { font-size: 14px; margin-bottom: 15px; }
   .time-controls span { font-size: 16px; }
   .close-btn { width: 35px; height: 35px; font-size: 18px; }
 }
+
 
 
 
