@@ -9,6 +9,7 @@
 <body>
 
   <div class="container">
+    <img src="VoiceBook.png" alt="VoiceBook Logo" class="logo">
     <h1 id="bookTitle">مكتبة الكتب الصوتية</h1>
     <h2 id="bookName">تحميل الكتاب...</h2>
     <h3 id="bookSheikh"></h3>
@@ -118,7 +119,7 @@ function openPlayer(title, src, btn){
   audio.src = src;
   playerCard.style.display = "block";
   btn.after(playerCard);
-  document.getElementById('bookTitle').textContent = `المحاضرة رقم ${title}`;
+  //document.getElementById('bookTitle').textContent = `المحاضرة رقم ${title}`;
   audio.load();
   audio.pause();
   playBtn.textContent = "▶";
@@ -177,5 +178,6 @@ function stopAudio(){ audio.pause(); playBtn.textContent='▶'; }
 
 </body>
 </html>
+
 
 
