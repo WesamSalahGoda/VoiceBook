@@ -1,6 +1,10 @@
 /* ===============================
    Reset & Box Sizing
-=============================== */
+   ===============================
+   إعادة ضبط القيم الافتراضية لكل العناصر
+   - إزالة الهوامش والحشوات الافتراضية
+   - توحيد حساب الأحجام ليشمل border و padding
+*/
 *,
 *::before,
 *::after {
@@ -10,8 +14,13 @@
 }
 
 /* ===============================
-   Global Stylesس
-=============================== */
+   Global Styles
+   ===============================
+   إعدادات عامة للصفحة كاملة
+   - نوع الخط
+   - ألوان الخلفية
+   - محاذاة المحتوى في منتصف الشاشة
+*/
 body {
   font-family: 'Cairo', Tahoma, Arial, sans-serif;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -23,6 +32,7 @@ body {
   padding: 20px;
 }
 
+/* تنسيق العناوين والنصوص العامة */
 h1, h2, h3, p {
   text-align: center;
 }
@@ -30,8 +40,9 @@ h1, h2, h3, p {
 h1 { font-size: 28px; margin-bottom: 10px; }
 h2 { font-size: 22px; margin-bottom: 6px; }
 h3 { font-size: 18px; font-weight: normal; opacity: 0.85; margin-bottom: 15px; }
-p { font-size: 14px; margin-bottom: 15px; }
+p  { font-size: 14px; margin-bottom: 15px; }
 
+/* تذييل الصفحة (حقوق – ملاحظات) */
 .footer {
   margin-top: 15px;
   font-size: 13px;
@@ -41,7 +52,11 @@ p { font-size: 14px; margin-bottom: 15px; }
 
 /* ===============================
    Container
-=============================== */
+   ===============================
+   الحاوية الرئيسية لكل محتوى الصفحة
+   - تحدد العرض الأقصى
+   - ترتب العناصر عموديًا
+*/
 .container {
   width: 90%;
   max-width: 520px;
@@ -53,7 +68,9 @@ p { font-size: 14px; margin-bottom: 15px; }
 
 /* ===============================
    Logo
-=============================== */
+   ===============================
+   تنسيق شعار الموقع الدائري أعلى الصفحة
+*/
 .logo {
   width: 80px;
   height: 80px;
@@ -66,7 +83,10 @@ p { font-size: 14px; margin-bottom: 15px; }
 
 /* ===============================
    Books & Lecture Buttons
-=============================== */
+   ===============================
+   شبكة الأزرار الخاصة بالكتب أو المحاضرات
+   - كل زر في سطر مستقل
+*/
 .grid {
   display: flex;
   flex-direction: column;
@@ -76,35 +96,32 @@ p { font-size: 14px; margin-bottom: 15px; }
   min-width: 360px;
 }
 
+/* تنسيق الروابط والأزرار داخل الشبكة */
 .grid a,
 .btn {
-  width: 100%;
-  display: block;
-  text-align: center;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.btn {
   padding: 12px 0;
-  background: #f57c00;
-  color: #fff;
-  border-radius: 14px;
+  background: linear-gradient(135deg, #fca311, #f57c00); /* برتقالي متدرج */
+  color: #1b1b1b;
+  border-radius: 16px;
   font-size: 16px;
-  font-weight: 500;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-  transition: transform 0.2s ease, background 0.2s ease;
-  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
+/* تأثير المرور على الزر */
 .btn:hover {
-  background: #1565c0;
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ffb703, #fca311); /* تفتيح عند المرور */
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55);
 }
 
 /* ===============================
    Player Card
-=============================== */
+   ===============================
+   كارت مشغل الصوت
+   - يظهر عند اختيار محاضرة
+*/
 .player-card {
   margin: auto;
   background: rgba(0,0,0,0.45);
@@ -113,18 +130,17 @@ p { font-size: 14px; margin-bottom: 15px; }
   padding: 30px 25px;
   width: 100%;
   max-width: 520px;
-  min-height: 0;             /* إزالة الارتفاع المسبق */
+  min-height: 0;
   box-shadow: 0 25px 50px rgba(0,0,0,0.6);
   text-align: center;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;                 /* تقليل المسافة بين العناصر */
+  gap: 12px;
 }
 
-
-/* Close Button */
+/* زر إغلاق المشغل */
 .close-btn {
   position: absolute;
   top: 15px;
@@ -143,22 +159,26 @@ p { font-size: 14px; margin-bottom: 15px; }
 
 .close-btn:hover { transform: scale(1.1); }
 
-/* Hide default audio */
+/* إخفاء مشغل الصوت الافتراضي */
 .player-card audio {
   display: none;
 }
 
-/* Audio Player Visual */
+/* ===============================
+   Audio Player Visual
+   ===============================
+   الجزء المرئي للمشغل (زر التشغيل والدائرة)
+*/
 .audio-player {
   display: flex;
   flex-direction: column;
-  align-items: center; /* أفقيًا في المنتصف */
-  justify-content: center; /* عموديًا في المنتصف */
+  align-items: center;
+  justify-content: center;
   gap: 10px;
   width: 100%;
 }
 
-/* Time Labels (قيمة الوقت فوق وتحت) */
+/* عرض الوقت الحالي والمدة */
 .time-labels {
   display: flex;
   flex-direction: column;
@@ -169,16 +189,15 @@ p { font-size: 14px; margin-bottom: 15px; }
   color: #ffd166;
 }
 
+/* زر التشغيل الدائري */
 .play-circle {
   width: 70px;
   height: 70px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ffd166, #fca311);
-
-  display: flex;             /* flex يضع النص في الوسط */
-  justify-content: center;   /* وسط أفقي */
-  align-items: center;       /* وسط عمودي */
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 32px;
   font-weight: bold;
   color: #1b1b1b;
@@ -186,15 +205,17 @@ p { font-size: 14px; margin-bottom: 15px; }
   box-shadow: 0 8px 20px rgba(0,0,0,0.5);
   transition: transform 0.2s ease;
   position: relative;
-  margin: 0 auto;            /* يظل في المنتصف */
-  line-height: 1;             /* يمنع الالتصاق لأعلى */
+  margin: 0 auto;
+  line-height: 1;
 }
-
-
 
 .play-circle:hover { transform: scale(1.05); }
 
-/* Progress Ring */
+/* ===============================
+   Progress Ring
+   ===============================
+   دائرة التقدم التي توضح زمن التشغيل
+*/
 .progress-ring {
   position: absolute;
   top: 0;
@@ -208,10 +229,14 @@ p { font-size: 14px; margin-bottom: 15px; }
   stroke-linecap: round;
 }
 
-/* Time Controls */
+/* ===============================
+   Time Controls
+   ===============================
+   أزرار تقديم وتأخير التشغيل بالدقائق
+*/
 .time-controls {
   display: flex;
-  justify-content: center; /* في الوسط */
+  justify-content: center;
   align-items: center;
   gap: 12px;
   margin-top: 10px;
@@ -241,7 +266,7 @@ p { font-size: 14px; margin-bottom: 15px; }
   color: #ffd166;
 }
 
-/* Disable buttons during running */
+/* تعطيل الأزرار أثناء التشغيل */
 .time-controls button.running {
   opacity: 0.5;
   pointer-events: none;
@@ -249,7 +274,9 @@ p { font-size: 14px; margin-bottom: 15px; }
 
 /* ===============================
    Responsive
-=============================== */
+   ===============================
+   تحسين العرض على الشاشات الصغيرة (الموبايل)
+*/
 @media (max-width: 480px) {
   body { padding: 15px; }
 
@@ -261,16 +288,14 @@ p { font-size: 14px; margin-bottom: 15px; }
 
   .book, .btn {
     font-size: 16px;
-    padding: 8px 0;
+    padding: 10px 0;
+    width: 90%;               /* يظل 90% على الموبايل */
   }
 
-
   .time-controls button { font-size: 16px; padding: 6px 12px; }
-  .time-controls span { font-size: 16px; }
+  .time-controls span   { font-size: 16px; }
   .close-btn { width: 35px; height: 35px; font-size: 18px; }
 }
-
-
-
-
-
+  .time-controls span   { font-size: 16px; }
+  .close-btn { width: 35px; height: 35px; font-size: 18px; }
+}
