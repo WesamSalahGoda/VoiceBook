@@ -11,7 +11,7 @@
   <div class="container">
     <img src="VoiceBook.png" alt="VoiceBook Logo" class="logo">
     <h1 id="bookTitle">مكتبة الكتب الصوتية</h1>
-    <h2 id="bookName">انتظر لتحميل الكتاب...</h2>
+    <h2 id="bookName">انتظر قليلاً لتحميل الكتاب...</h2>
     <h3 id="bookSheikh"></h3>
     <p>اختر رقم المحاضرة للاستماع</p>
 
@@ -48,7 +48,6 @@ const timeValueEl = document.getElementById('timeValue');
 
 let currentMinutes = 0;
 let maxMinutes = 0;
-let currentLectureId = null;
 
 const params = new URLSearchParams(window.location.search);
 const bookID = params.get("book");
@@ -120,8 +119,6 @@ fetch(sheetUrl)
 
 function openPlayer(title, src, btn){
   stopAudio();
-  audio.dataset.sent = "false";   // ⭐ إعادة التهيئة
-  currentLectureId = title; // ⭐ رقم المحاضرة
   audio.src = src;
   playerCard.style.display = "block";
   btn.after(playerCard);
@@ -162,32 +159,6 @@ audio.addEventListener("loadedmetadata", ()=>{
   durationLabel.textContent = formatTime(audio.duration);
 });
 
-audio.addEventListener("ended", () => {
-
-  if (!currentLectureId) return;
-
-  // منع الإرسال أكثر من مرة
-  if (audio.dataset.sent === "true") return;
-  audio.dataset.sent = "true";
-
-  fetch("https://script.google.com/macros/s/AKfycbzBZZsGJ2S5TqFLcOH_pzsW_eW7DjpNPxtRSRboTytP9r8uOKrKxuF7eRm1WN47KNAX/exec", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      action: "finish",
-      ID: currentLectureId
-    })
-  })
-  .then(res => res.json())
-  .then(data => console.log("Lecture marked as finished", data))
-  .catch(err => console.error(err));
-
-});
-
-
-
 function increaseTime(){ if(audio.paused && currentMinutes<maxMinutes){ currentMinutes++; updateMinuteLabel(); } }
 function decreaseTime(){ if(audio.paused && currentMinutes>0){ currentMinutes--; updateMinuteLabel(); } }
 function updateMinuteLabel(){ timeValueEl.textContent = currentMinutes; audio.currentTime = currentMinutes*60; }
@@ -204,7 +175,3 @@ function stopAudio(){ audio.pause(); playBtn.textContent='▶'; }
 
 </body>
 </html>
-
-
-
-
