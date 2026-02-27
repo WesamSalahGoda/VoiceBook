@@ -107,7 +107,7 @@ fetch(sheetUrl)
     document.getElementById("bookSheikh").textContent = `للشيخ ${bookSheikh}`;
 
     for(let i=1; i<=lecturesCount; i++){
-      const num = info.digits === 2 ? String(i).padStart(2,'0') : String(i);
+      const num = String(i).padStart(info.digits,'0');
       const audioSrc = `${info.folder}${info.prefix}${num}.${info.ext}`;
 
       const btn = document.createElement("button");
@@ -176,6 +176,7 @@ function stopAudio(){ audio.pause(); playBtn.textContent='▶'; }
 
 </body>
 </html>
+
 
 
 
